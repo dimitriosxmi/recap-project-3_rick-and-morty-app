@@ -1,4 +1,5 @@
 import { createCharacterCard } from "./components/card/card.js";
+import { createButton } from "./components/nav-button/nav-button.js";
 
 console.clear();
 
@@ -13,11 +14,12 @@ const nextButton = document.querySelector('[data-js="button-next"]');
 const pagination = document.querySelector('[data-js="pagination"]');
 
 // States
+export { searchBar, navigation };
 let maxPage = 1;
 let page = 1;
 let searchQuery = "";
 
-async function fetchCharacters() {
+export async function fetchCharacters() {
   cardContainer.innerHTML = "";
   try {
     const characters = await fetch(
@@ -55,22 +57,7 @@ async function fetchCharacters() {
 }
 
 fetchCharacters();
-
-prevButton.addEventListener("click", () => {
-  if (page > 1) {
-    page--;
-    fetchCharacters();
-    pagination.textContent = page + "/" + maxPage;
-  }
-});
-
-nextButton.addEventListener("click", () => {
-  if (page < maxPage) {
-    page++;
-    fetchCharacters();
-    pagination.textContent = page + "/" + maxPage;
-  }
-});
+createButton("searchButton");
 
 searchBar.addEventListener("submit", (event) => {
   event.preventDefault();
@@ -79,4 +66,20 @@ searchBar.addEventListener("submit", (event) => {
   searchQuery = data.query;
   console.log(searchQuery);
   fetchCharacters();
+});
+
+createButton("prevButton", () => {
+  if (page > 1) {
+    page--;
+    fetchCharacters();
+    pagination.textContent = page + "/" + maxPage;
+  }
+});
+
+createButton("nextButton", () => {
+  if (page < maxPage) {
+    page++;
+    fetchCharacters();
+    pagination.textContent = page + "/" + maxPage;
+  }
 });
