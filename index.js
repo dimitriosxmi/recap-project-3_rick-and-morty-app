@@ -19,27 +19,37 @@ const searchQuery = "";
 
 async function fetchCharacters() {
   cardContainer.innerHTML = "";
-  const characters = await fetch("https://rickandmortyapi.com/api/character/");
-  const characterJSON = await characters.json();
-  const characterData = characterJSON.results;
-
-  characterData.forEach((element) => {
-    const characterImage = element.image;
-    const characterName = element.name;
-    const characterStatus = element.status;
-    const characterType = element.type;
-    const characterOccurances = element.episode.length;
-
-    const card = createCharacterCard(
-      characterImage,
-      characterName,
-      characterStatus,
-      characterType,
-      characterOccurances
+  try {
+    const characters = await fetch(
+      "https://rickandmortyapi.com/api/character/"
     );
+    if (characters.ok) {
+      const characterJSON = await characters.json();
+      const characterData = characterJSON.results;
 
-    cardContainer.append(card);
-  });
+      characterData.forEach((element) => {
+        const characterImage = element.image;
+        const characterName = element.name;
+        const characterStatus = element.status;
+        const characterType = element.type;
+        const characterOccurances = element.episode.length;
+
+        const card = createCharacterCard(
+          characterImage,
+          characterName,
+          characterStatus,
+          characterType,
+          characterOccurances
+        );
+
+        cardContainer.append(card);
+      });
+    } else {
+      throw new Error("API Response not ok.");
+    }
+  } catch (error) {
+    console.error("Catched error: ", error);
+  }
 }
 
 fetchCharacters();
